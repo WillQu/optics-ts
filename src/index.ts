@@ -1,4 +1,4 @@
-import * as pokedex from "./pokedex.json"
+import pokedex from "./pokedex.json"
 import {fromTraversable, Lens, Traversal} from "monocle-ts"
 import {array} from "fp-ts/lib/Array"
 
@@ -22,6 +22,7 @@ interface Pokemon {
     readonly id: number
     readonly name: Names
     readonly type: string[]
+    readonly base: Base
 }
 
 const names = Lens.fromProp<Pokemon>()('name')
