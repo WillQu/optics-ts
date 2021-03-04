@@ -1,33 +1,33 @@
 import * as pokedex from "./pokedex.json"
-import { Lens } from "monocle-ts"
+import {fromTraversable, Lens, Traversal} from "monocle-ts"
+import {array} from "fp-ts/lib/Array"
 
 interface Names {
-    english: string
-    japanese: string
-    chinese: string
-    french: string
+    readonly english: string
+    readonly japanese: string
+    readonly chinese: string
+    readonly french: string
 }
 
-const french = Lens.fromProp<Names>()('french')
-
 interface Base {
-    HP: number
-    Attack: number
-    Defense: number
-    "Sp. Attack": number
-    "Sp. Defense": number
-    Speed: number
+    readonly HP: number
+    readonly Attack: number
+    readonly Defense: number
+    readonly "Sp. Attack": number
+    readonly "Sp. Defense": number
+    readonly Speed: number
 }
 
 interface Pokemon {
-    id: number
-    name: Names
-    type: string[]
+    readonly id: number
+    readonly name: Names
+    readonly type: string[]
 }
 
 const names = Lens.fromProp<Pokemon>()('name')
+const french = Lens.fromProp<Names>()('french')
+const traversal = fromTraversable(array)<Pokemon>()
 
-const pokemon: Pokemon = pokedex[0]
-console.log(names.compose(french).get(pokemon))
-console.log(names.compose(french).modify(s => "Le " + s)(pokemon))
+console.log(names.composeLens(french).modify(s => "Le " + s)(pokedex[0]))
+console.log(traversal.composeLens(names).composeLens(french).modify(s => "Le " + s)(pokedex))
 
